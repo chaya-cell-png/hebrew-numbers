@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>מקריאים מספרים</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@500;600&display=swap">
+  <link rel="stylesheet" href="style.css?v=9">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>מקריאים מספרים</h1>
+      <p class="sub" id="listName"></p>
+    </header>
+
+    <div id="unsupported" class="notice error" hidden>
+      הדפדפן הזה לא תומך בזיהוי דיבור. יש לפתוח את הדף ב-Chrome או ב-Edge.
+    </div>
+    <div id="micNotice" class="notice warn" hidden>
+      <span>יש לאשר גישה למיקרופון כדי להשתמש בהקראה.</span>
+      <span class="hint">אם הגישה נחסמה: לחצי על סמל המנעול בשורת הכתובת ← מיקרופון ← אפשר.</span>
+      <button id="micRetry" class="btn small">נסי שוב</button>
+    </div>
+
+    <section class="control">
+      <button id="micBtn" class="btn primary big">● התחל הקראה</button>
+      <div id="status" class="status" aria-live="polite">מוכן להקראה</div>
+      <div id="interim" class="interim"></div>
+    </section>
+
+    <section>
+      <h2>מספרים שהוזנו: <span id="count">0</span></h2>
+      <div id="tableWrap" class="table-wrap">
+        <table id="table" class="data">
+          <thead>
+            <tr><th class="idx">#</th><th>מספר</th><th class="text-col">טקסט שהוקרא</th><th class="actions-col"></th></tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <p id="empty" class="empty">עדיין אין מספרים. לחצי על "התחל הקראה" ותתחילי להקריא.</p>
+    </section>
+
+    <section class="bar">
+      <button id="undoBtn" class="btn">בטל האחרון</button>
+      <button id="clearBtn" class="btn">נקה הכל</button>
+      <button id="exportBtn" class="btn primary export">ייצוא ל-Excel</button>
+    </section>
+
+    <section class="bar secondary">
+      <button id="saveListBtn" class="btn small">שמור רשימה</button>
+      <button id="newListBtn" class="btn small">התחל רשימה חדשה</button>
+      <button id="listsBtn" class="btn small">רשימות שמורות</button>
+    </section>
+
+    <details class="settings-box">
+      <summary>הגדרות</summary>
+      <label class="setting">אורך המספר
+        <select id="digitLength">
+          <option value="6">6 ספרות</option>
+          <option value="0">כל אורך</option>
+        </select>
+      </label>
+      <label class="setting check" id="showTextLabel">
+        <input type="checkbox" id="showText"> הצג את הטקסט שהוקרא
+      </label>
+      <p class="hint"><a href="lab.html">דף בדיקות זיהוי</a></p>
+    </details>
+  </main>
+
+  <dialog id="dialog">
+    <form method="dialog">
+      <h3 id="dialogTitle"></h3>
+      <p id="dialogText"></p>
+      <div id="dialogBody"></div>
+      <input id="dialogInput" type="text" hidden>
+      <div id="dialogButtons" class="dialog-buttons"></div>
+    </form>
+  </dialog>
+
+  <script src="parser.js?v=3"></script>
+  <script src="assembler.js?v=1"></script>
+  <script src="xlsx.js?v=1"></script>
+  <script src="speech.js?v=1"></script>
+  <script src="app.js?v=8"></script>
+</body>
+</html>

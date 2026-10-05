@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>בדיקת זיהוי מספרים</title>
+  <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>מקריאים מספרים</h1>
+      <p class="sub">דף בדיקה לאיכות הזיהוי הקולי · <a href="index.html">חזרה לכלי</a></p>
+    </header>
+
+    <div id="unsupported" class="notice error" hidden>
+      הדפדפן הזה לא תומך בזיהוי דיבור. יש לפתוח את הדף ב-Chrome או ב-Edge.
+    </div>
+    <div id="micNotice" class="notice warn" hidden>
+      יש לאשר גישה למיקרופון כדי להשתמש בהקראה.
+      <button id="micRetry" class="btn small">נסי שוב</button>
+    </div>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-mode="free" role="tab">הקראה חופשית</button>
+      <button class="tab" data-mode="test" role="tab">מבחן זיהוי</button>
+    </nav>
+
+    <div class="settings">
+      <label>אורך המספר
+        <select id="digitLength">
+          <option value="6">6 ספרות</option>
+          <option value="0">כל אורך</option>
+        </select>
+      </label>
+    </div>
+
+    <section class="control">
+      <button id="micBtn" class="btn primary big">● התחל הקראה</button>
+      <div id="status" class="status">מוכן להקראה</div>
+      <div id="interim" class="interim" aria-live="polite"></div>
+    </section>
+
+    <div id="confirm" class="notice confirm" hidden>
+      <span>האם התכוונת ל־</span>
+      <input id="confirmValue" class="confirm-input" inputmode="numeric" dir="ltr" aria-label="המספר שזוהה (ניתן לעריכה)">
+      <span>?</span>
+      <span class="hint" id="confirmText"></span>
+      <div class="row">
+        <button id="confirmYes" class="btn small primary">כן, הוסף</button>
+        <button id="confirmNo" class="btn small">התעלם</button>
+      </div>
+    </div>
+
+    <!-- Free mode -->
+    <section id="freePanel">
+      <div class="row between">
+        <h2>מספרים שהוזנו: <span id="count">0</span></h2>
+        <div class="row">
+          <button id="undoBtn" class="btn small">בטל האחרון</button>
+          <button id="clearNumbersBtn" class="btn small">נקה הכל</button>
+        </div>
+      </div>
+      <ol id="numberList" class="numbers"></ol>
+    </section>
+
+    <!-- Test mode -->
+    <section id="testPanel" hidden>
+      <div class="row wrap">
+        <label>קטגוריה
+          <select id="category"></select>
+        </label>
+        <label>כמות
+          <select id="length">
+            <option value="1">מספר בודד</option>
+            <option value="3">רצף של 3</option>
+          </select>
+        </label>
+        <label id="styleLabel">אופן הקראה
+          <select id="style">
+            <option value="full">מלא (מאתיים חמישים וארבעה אלף…)</option>
+            <option value="triplets">שלשות (מאתיים חמישים וארבע, שבע מאות…)</option>
+            <option value="pairs">זוגות (עשרים וחמש, ארבעים ושבע…)</option>
+            <option value="digits">ספרה-ספרה (שתיים, חמש, ארבע…)</option>
+          </select>
+        </label>
+        <label>קצב
+          <select id="pace">
+            <option value="normal">רגיל, עם הפסקה</option>
+            <option value="fast">מהיר, כמעט בלי הפסקה</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="target-card">
+        <div class="target-label">הקריאי:</div>
+        <div id="targetDigits" class="target-digits">—</div>
+        <div id="targetWords" class="target-words"></div>
+        <div id="collected" class="collected"></div>
+        <div id="verdict" class="verdict"></div>
+        <button id="skipBtn" class="btn small">דלגי</button>
+      </div>
+
+      <h2>תוצאות</h2>
+      <table class="stats">
+        <thead><tr><th>קטגוריה</th><th>נבדקו</th><th>נכון</th><th>אחוז</th><th>נשאלה שאלה</th><th>נכון בחלופה</th></tr></thead>
+        <tbody id="statsBody"></tbody>
+      </table>
+    </section>
+
+    <section>
+      <div class="row between">
+        <h2>יומן זיהוי</h2>
+        <div class="row">
+          <button id="exportBtn" class="btn small">ייצוא יומן (JSON)</button>
+          <button id="clearLogBtn" class="btn small">נקה יומן</button>
+        </div>
+      </div>
+      <p class="hint">כל תוצאה סופית מהמנוע: הטקסט הגולמי, החלופות, רמת הביטחון והזמן מהתוצאה הקודמת.</p>
+      <div class="table-wrap">
+        <table class="log">
+          <thead><tr><th>שעה</th><th>טקסט גולמי</th><th>זוהה</th><th>ביטחון</th><th>פער</th><th>חלופות</th></tr></thead>
+          <tbody id="logBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="parser.js?v=3"></script>
+  <script src="assembler.js?v=1"></script>
+  <script src="lab.js?v=2"></script>
+</body>
+</html>
