@@ -358,10 +358,11 @@
     setStatus('הטבלה נוקתה');
   }
 
-  function localDate() {
+  // Local date and time for the file name; "-" instead of ":" since Windows forbids colons in names.
+  function localStamp() {
     const d = new Date();
     const p = n => String(n).padStart(2, '0');
-    return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+    return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}_${p(d.getHours())}-${p(d.getMinutes())}`;
   }
 
   // Plain numbers become numeric cells; a leading zero (e.g. 054798) stays text so it isn't lost.
@@ -390,7 +391,7 @@
     const blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `numbers_${localDate()}.xlsx`;
+    a.download = `numbers_${localStamp()}.xlsx`;
     document.body.appendChild(a);
     a.click();
     a.remove();
