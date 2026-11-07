@@ -6,7 +6,7 @@
   <title>מקריאים מספרים</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@500;600&display=swap">
-  <link rel="stylesheet" href="style.css?v=10">
+  <link rel="stylesheet" href="style.css?v=12">
 </head>
 <body>
   <main>
@@ -70,6 +70,14 @@
     </details>
   </main>
 
+  <aside id="timer" class="timer" aria-label="טיימר">
+    <div id="timerDisplay" class="timer-display" aria-live="off">00:00</div>
+    <div class="timer-buttons">
+      <button id="timerToggle" class="btn small primary" type="button">התחל</button>
+      <button id="timerReset" class="btn small" type="button">אפס</button>
+    </div>
+  </aside>
+
   <dialog id="dialog">
     <form method="dialog">
       <h3 id="dialogTitle"></h3>
@@ -85,5 +93,6 @@
   <script src="xlsx.js?v=1"></script>
   <script src="speech.js?v=1"></script>
   <script src="app.js?v=9"></script>
+  <script src="timer.js?v=1"></script>
 </body>
 </html>
