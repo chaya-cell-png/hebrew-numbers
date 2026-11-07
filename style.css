@@ -211,23 +211,24 @@ dialog input[type=text] {
   .bar .export { flex-basis: 100%; order: -1; margin: 0; }
 }
 
-/* ---------- Side timer ---------- */
+/* ---------- Side timer (bottom-right corner) ---------- */
 .timer {
-  position: fixed; left: 16px; top: 50%; transform: translateY(-50%); z-index: 20;
-  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-  padding: 8px 10px; box-shadow: 0 4px 14px rgb(0 0 0 / 0.12);
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  position: fixed; right: 16px; bottom: 16px; z-index: 20;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+  padding: 10px 14px; box-shadow: 0 4px 14px rgb(0 0 0 / 0.15);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
 }
 .timer-display {
   direction: ltr; font-family: var(--narrow); font-variant-numeric: tabular-nums;
-  font-size: 1.5rem; font-weight: 600; line-height: 1; color: var(--muted);
+  font-size: 2.2rem; font-weight: 600; line-height: 1; color: var(--muted);
 }
 .timer.running .timer-display { color: var(--text); }
-.timer-buttons { display: flex; gap: 4px; }
-.timer .btn.small { padding: 4px 10px; font-size: 0.8rem; border-radius: 8px; }
+.timer-buttons { display: flex; gap: 6px; }
+.timer .btn.small { padding: 6px 14px; font-size: 0.95rem; border-radius: 8px; }
+/* Leave room so the last buttons can scroll out from under the timer. */
+main { padding-bottom: 130px; }
 
-/* Not enough room beside the 860px column: move to the bottom corner. */
-@media (max-width: 1150px) {
-  .timer { top: auto; bottom: 12px; transform: none; left: 12px; flex-direction: row; padding: 6px 8px; }
-  .timer-display { font-size: 1.15rem; }
+@media (max-width: 600px) {
+  .timer { right: 12px; bottom: 12px; padding: 8px 10px; }
+  .timer-display { font-size: 1.8rem; }
 }
