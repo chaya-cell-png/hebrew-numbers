@@ -26,6 +26,7 @@
     current: load('hn-current', { listId: null, name: null, dirty: false }),
     settings: { digitLength: 6, showText: true, ...load('hn-settings', {}) },
     editingId: null,
+    adding: false,                             // manual-entry row open at the end of the table
   };
   function persist() {
     save('hn-rows', state.rows);
@@ -168,7 +169,7 @@
     renderTable();
 
     $('count').textContent = state.rows.filter(r => r.status === 'ok').length;
-    $('empty').hidden = state.rows.length > 0;
+    $('empty').hidden = state.rows.length > 0 || state.adding;
     $('listName').textContent = state.current.name
       ? 'רשימה: ' + state.current.name + (state.current.dirty ? ' (יש שינויים שלא נשמרו)' : '')
       : (state.rows.length ? 'רשימה חדשה (לא נשמרה)' : '');
@@ -259,6 +260,61 @@
       tr.append(idx, num, text, actions);
       body.appendChild(tr);
     });
+    if (state.adding) body.appendChild(draftRow());
+  }
+
+  // Manual entry row: Enter saves and opens the next one, Escape cancels.
+  function draftRow() {
+    const tr = document.createElement('tr');
+    tr.className = 'draft';
+    const idx = document.createElement('td');
+    idx.className = 'idx';
+    idx.textContent = state.rows.length + 1;
+    const num = document.createElement('td');
+    num.className = 'num-cell';
+    const input = document.createElement('input');
+    input.className = 'edit-input';
+    input.inputMode = 'numeric';
+    input.dir = 'ltr';
+    input.setAttribute('aria-label', 'הקלדת מספר ידנית');
+    input.onkeydown = e => {
+      if (e.key === 'Enter') addManual(input.value);
+      if (e.key === 'Escape') { state.adding = false; render(); }
+    };
+    num.appendChild(input);
+    const text = document.createElement('td');
+    text.className = 'text-col';
+    const actions = document.createElement('td');
+    actions.className = 'actions-col';
+    actions.append(
+      iconButton('✓', 'שמור', () => addManual(input.value), 'ok'),
+      iconButton('↺', 'ביטול', () => { state.adding = false; render(); }),
+    );
+    tr.append(idx, num, text, actions);
+    setTimeout(() => { input.focus(); tr.scrollIntoView({ block: 'nearest' }); }, 0);
+    return tr;
+  }
+
+  function startAdd() {
+    state.editingId = null;
+    state.adding = true;
+    render();
+  }
+
+  function addManual(value) {
+    const digits = String(value).replace(/\D/g, '');
+    if (!digits) { state.adding = false; render(); return; }
+    const len = state.settings.digitLength;
+    const ok = !len || digits.length === len;
+    state.rows.push({
+      id: uid(),
+      digits,
+      text: 'הוקלד ידנית',
+      status: ok ? 'ok' : 'pending',
+      reason: ok ? undefined : 'length',
+    });
+    setStatus(ok ? 'נוסף: ' + digits : 'האם התכוונת ל־' + digits + '?', ok ? 'ok' : 'warn');
+    changed();            // renders; the draft stays open for the next number
   }
 
   function scrollToRow(id) {
@@ -539,6 +595,7 @@
     }
     $('micBtn').onclick = () => (listener.active ? stopListening() : startListening());
     $('micRetry').onclick = startListening;
+    $('addRowBtn').onclick = startAdd;
     $('undoBtn').onclick = undoLast;
     $('clearBtn').onclick = clearAll;
     $('exportBtn').onclick = exportExcel;

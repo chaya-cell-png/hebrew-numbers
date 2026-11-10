@@ -1,7 +1,6 @@
 // Small stopwatch (minutes:seconds) pinned to the side of the page.
-// State lives in localStorage, so it survives reloads and closing the tab.
-// While running we store the start timestamp, so time keeps counting even
-// when the page is closed.
+// State lives in localStorage, so the elapsed time survives reloads and
+// closing the tab. Closing the page pauses the timer (see pauseOnLeave).
 (function () {
   const KEY = 'hebrewNumbers.timer';
   const display = document.getElementById('timerDisplay');
@@ -74,6 +73,15 @@
     save();
     render();
   });
+
+  // Closing (or leaving) the page pauses the timer and keeps the elapsed time.
+  // It stays paused until "המשך" is pressed.
+  function pauseOnLeave() {
+    if (state.startedAt === null) return;
+    state = { elapsed: totalMs(), startedAt: null };
+    save();
+  }
+  window.addEventListener('pagehide', pauseOnLeave);
 
   // Keep several open tabs in sync.
   window.addEventListener('storage', (e) => {
